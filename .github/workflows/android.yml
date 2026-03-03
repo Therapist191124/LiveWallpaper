@@ -1,26 +1,31 @@
-name: Android CI
+name: Android Build
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - main  # أو اسم الفرع الذي تستخدمه
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - main  # أو اسم الفرع الذي تستخدمه
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 11
-      uses: actions/setup-java@v4
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'  # أو الإصدار الذي تستخدمه في المشروع
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 30  # أو أي API level يناسب التطبيق
+          build-tools: 30.0.3  # اختر نسخة الأدوات التي تستخدمها
+
+      - name: Build with Gradle
+        run: ./gradlew build  # سيقوم ببناء التطبيق باستخدام Gradle
